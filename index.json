@@ -1,0 +1,16 @@
+{
+    "title": "Verification",
+    "description": "Verify user input",
+    "details": {
+      "steps": [
+        {
+          "title": "Verify the startup probe configuration",
+          "text": "intro.md",
+          "verify": "verify.sh nginx-deployment"
+        }
+      ]
+    },
+    "backend": {
+      "imageid": "ubuntu"
+    }
+  }
