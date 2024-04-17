@@ -1,6 +1,6 @@
 {
-    "title": "Verification",
-    "description": "Verify user input",
+    "title": "SRE challenge",
+    "description": "Startup probe configuration on a deployment",
     "details": {
       "steps": [
         {
@@ -11,6 +11,6 @@
       ]
     },
     "backend": {
-      "imageid": "ubuntu"
+      "imageid": "kubernetes-kubeadm-1node"
     }
   }
