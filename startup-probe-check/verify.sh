@@ -2,7 +2,7 @@
 
 # Function to check deployment status and startup probe configuration
 check_deployment_and_probe() {
-  deployment_name="$1"
+  deployment_name="nginx-deployment"
 
   # Get deployment details in JSON format
   deployment_info=$(kubectl get deployment "$deployment_name" -o json)
@@ -34,15 +34,6 @@ check_deployment_and_probe() {
     fi
   fi
 }
-
-# Get deployment name from argument (optional)
-deployment_name="${1:-}"
-
-# Check if deployment name is provided
-if [[ -z "$deployment_name" ]]; then
-  echo "Usage: $0 <deployment_name>"
-  exit 1
-fi
 
 # Call the check function
 check_deployment_and_probe "$deployment_name"

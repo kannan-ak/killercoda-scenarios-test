@@ -6,7 +6,7 @@
         {
           "title": "Verify the startup probe configuration",
           "text": "intro.md",
-          "verify": "verify.sh nginx-deployment"
+          "verify": "verify.sh"
         }
       ]
     },
