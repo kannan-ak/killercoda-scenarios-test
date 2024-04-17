@@ -1,39 +1,20 @@
 #!/bin/bash
 
-# Function to check deployment status and startup probe configuration
-check_deployment_and_probe() {
-  deployment_name="nginx-deployment"
+# Check if the deployment is running
+deployment_status=$(kubectl get deployment nginx-deployment --output=jsonpath='{.status.conditions[?(@.type=="Available")].status}')
 
-  # Get deployment details in JSON format
-  deployment_info=$(kubectl get deployment "$deployment_name" -o json)
-
-  # Check if deployment exists and retrieve exit code
-  deployment_exists=$?
-
-  # Exit if deployment doesn't exist
-  if [[ $deployment_exists -ne 0 ]]; then
-    echo "Error: Deployment '$deployment_name' not found."
+if [ "$deployment_status" != "True" ]; then
+    echo "Deployment is not in a running state."
     exit 1
-  fi
+fi
 
-  # Check deployment status using JSONPath
-  deployment_status=$(echo "$deployment_info" | jq -r '.status.readyReplicas')
+# Check if the startup probe is configured
+startup_probe=$(kubectl get deployment nginx-deployment --output=jsonpath='{.spec.template.spec.containers[].startupProbe}')
 
-  # Check if deployment has at least 1 ready replica
-  if [[ -z "$deployment_status" || "$deployment_status" -eq 0 ]]; then
-    echo "Warning: Deployment '$deployment_name' is not running or has 0 ready replicas."
-  else
-    # Check if startupProbe exists using JSONPath
-    startup_probe=$(echo "$deployment_info" | jq -r '.spec.template.spec.containers[0].startupProbe')
-
-    # Check if startupProbe is not null (configured)
-    if [[ -n "$startup_probe" ]]; then
-      echo "Correct. Deployment '$deployment_name' is running and has a properly configured startup probe."
-    else
-      echo "Warning: Deployment '$deployment_name' is running but has no startup probe configured."
-    fi
-  fi
-}
-
-# Call the check function
-check_deployment_and_probe "$deployment_name"
+if [ -n "$startup_probe" ]; then
+    echo "Startup probe is configured."
+    exit 0
+else
+    echo "Startup probe is not configured."
+    exit 2
+fi
